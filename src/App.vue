@@ -1,31 +1,31 @@
 <script setup>
 import { ref, computed } from 'vue'
-const startTime = ref(null)
+const setIntervalId = ref(null)
 const elapsedTime = ref(0)
-const isRunning = ref(false)
 const MILLISECONDS = 10
-const toggleTimer = () => {
+const isRunning = ref(false)
+function toggleTimer() {
   if (isRunning.value) {
-    clearInterval(startTime.value)
+    clearInterval(setIntervalId.value)
   } else {
-    startTime.value = setInterval(() => {
+    setIntervalId.value = setInterval(() => {
       elapsedTime.value += MILLISECONDS
     }, MILLISECONDS)
   }
   isRunning.value = !isRunning.value
 }
 
-const resetTimer = () => {
-  clearInterval(startTime.value)
+function resetTimer() {
+  clearInterval(setIntervalId.value)
   isRunning.value = false
   elapsedTime.value = 0
 }
 
 const formattedTime = computed(() => {
-  const milliseconds = elapsedTime.value % 1000
+  const milliseconds = elapsedTime.value % 1_000
   const seconds = Math.floor((elapsedTime.value / 1000) % 60)
-  const minutes = Math.floor((elapsedTime.value / (1000 * 60)) % 60)
-  const hours = Math.floor((elapsedTime.value / (1000 * 60 * 60)) % 24)
+  const minutes = Math.floor((elapsedTime.value / (1_000 * 60)) % 60)
+  const hours = Math.floor((elapsedTime.value / (1_000 * 60 * 60)) % 24)
 
   return `${hours.toString().padStart(2, '0')}:${minutes
     .toString()
@@ -35,14 +35,11 @@ const formattedTime = computed(() => {
     .padStart(2, '0')}`
 })
 </script>
-
 <template>
   <main
-    class="flex flex-col items-center justify-center bg-gray-900 text-white p-8 shadow-md h-screen"
+    class="flex flex-col items-center justify-center bg-gray-900 text-white p-8 h-screen"
   >
-    <p class="text-8xl font-bold font-mono">
-      {{ formattedTime }}
-    </p>
+    <p class="text-8xl font-bold font-mono">{{ formattedTime }}</p>
     <section class="flex justify-center space-x-4">
       <button
         class="px-4 py-2 rounded-lg border border-green-500 hover:bg-green-600 focus:outline-none transition"
@@ -52,7 +49,7 @@ const formattedTime = computed(() => {
         {{ isRunning ? 'Stop' : 'Start' }}
       </button>
       <button
-        class="px-4 py-2 rounded-lg bg-transparent border border-red-500 hover:bg-red-600 focus:outline-none transition disabled:cursor-not-allowed"
+        class="px-4 py-2 rounded-lg border border-red-500 hover:bg-red-600 focus:outline-none transition disabled:cursor-not-allowed"
         type="button"
         @click="resetTimer"
         :disabled="isRunning"
