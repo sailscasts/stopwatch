@@ -15,11 +15,7 @@ function toggleTimer() {
   isRunning.value = !isRunning.value
 }
 
-function resetTimer() {
-  clearInterval(setIntervalId.value)
-  isRunning.value = false
-  elapsedTime.value = 0
-}
+
 
 const formattedTime = computed(() => {
   const milliseconds = elapsedTime.value % 1_000
@@ -34,6 +30,13 @@ const formattedTime = computed(() => {
     .slice(0, 2)
     .padStart(2, '0')}`
 })
+let lastTime =[];
+function resetTimer() {
+  lastTime.push(formattedTime.value)
+  clearInterval(setIntervalId.value)
+  isRunning.value = false
+  elapsedTime.value = 0
+}
 </script>
 <template>
   <main
@@ -57,5 +60,10 @@ const formattedTime = computed(() => {
         Reset
       </button>
     </section>
+  
+    <ul  class="bg bg-transparent text-white text-2xl scroll-snap-type: y var(--tw-scroll-snap-strictness); mt-3  h-40 w-[200px] rounded-lg items-center flex flex-col font-bold  border-green-500 ">
+    <li v-for="item in lastTime" :key="lastTime" > {{ item }} </li>
+   </ul>
+   
   </main>
 </template>
